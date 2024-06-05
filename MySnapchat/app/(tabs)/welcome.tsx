@@ -1,9 +1,11 @@
+//welcome.tsx
+
 import { Image, StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-native";
 
 let deviceHeight = Dimensions.get('window').height;
 let deviceWidth = Dimensions.get('window').width;
 
-export default function HomeScreen() {
+export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MySnapchat</Text>
