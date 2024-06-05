@@ -1,11 +1,23 @@
 //welcome.tsx
 
 import { Image, StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 let deviceHeight = Dimensions.get('window').height;
 let deviceWidth = Dimensions.get('window').width;
 
 export default function WelcomeScreen() {
+
+  const navigation = useNavigation();
+
+  const login = () => {
+    navigation.navigate("(tabs)/login" as never);
+  }
+  
+  const register = () => {
+    navigation.navigate("(tabs)/register" as never);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MySnapchat</Text>
@@ -13,11 +25,11 @@ export default function WelcomeScreen() {
         source={require("../../assets/images/snapghost.png")}
         style={styles.image}
       />
-      <TouchableOpacity style={styles.redBox}>
-        <Text style={styles.text}>Login</Text>
+      <TouchableOpacity style={styles.redBox} onPress={login}>
+        <Text style={styles.text}>Se connecter</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.blueBox}>
-        <Text style={styles.text}>Sign Up</Text>
+      <TouchableOpacity style={styles.blueBox} onPress={register}>
+        <Text style={styles.text}>S'inscrire</Text>
       </TouchableOpacity>
     </View>
   );
@@ -42,7 +54,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     textAlignVertical: "center",
-    marginTop : 25,
+    marginTop: 25,
   },
   image: {
     width: 100,
