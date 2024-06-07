@@ -16,6 +16,7 @@ const Login = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhc3NpZHkubmd1eWVuQGVwaXRlY2guZXUiLCJpYXQiOjE3MTc3NjQwNjl9.GmU6Ur8xdyKF_orG358zEEHl9eF6AC5x2IxbDmne4mc'
         },
         body: JSON.stringify({ 
           email: email, 
@@ -30,7 +31,7 @@ const Login = () => {
         setTimeout(() => {
           setSuccessMessage('');
           navigation.navigate("(tabs)/home" as never); 
-        }, 2000);
+        }, 1000);
       } else {
         setErrorMessage(json.message || 'Échec de la connexion');
         console.error('Échec de la connexion');

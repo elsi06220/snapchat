@@ -41,7 +41,7 @@ const Register = () => {
         setTimeout(() => {
           setSuccessMessage('');
           navigation.navigate("(tabs)/login" as never); 
-        }, 2000);
+        }, 1000);
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Échec de l'inscription");
