@@ -27,6 +27,10 @@ const Login = () => {
       if (response.ok) {
         setSuccessMessage('Connexion réussie !'); 
         console.log('Connexion réussie !');
+        setTimeout(() => {
+          setSuccessMessage('');
+          navigation.navigate("(tabs)/home" as never); 
+        }, 2000);
       } else {
         setErrorMessage(json.message || 'Échec de la connexion');
         console.error('Échec de la connexion');
@@ -42,6 +46,7 @@ const Login = () => {
   const register = () => {
     navigation.navigate("(tabs)/register" as never);
   };
+
 
   return (
     <View style={styles.container}>
