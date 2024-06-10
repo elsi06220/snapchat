@@ -1,54 +1,31 @@
-// index.tsx
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import WelcomeScreen from './welcome';
+import Login from './login';
+import Home from './home';
+import Register from './register';
+import SplashScreen from './splashscreen';
 
-import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, View, Text, Dimensions, } from 'react-native';
-import WelcomeScreen from './welcome'; 
+type RootStackParamList = {
+  'tabs/splashscreen': undefined;
+  'tabs/welcome': undefined;
+  'tabs/login': { isAuthenticated: boolean } | undefined;
+  'tabs/home': { isAuthenticated: boolean } | undefined;
+  'tabs/register': undefined;
+};
 
-let deviceHeight = Dimensions.get('window').height;
+const Stack = createStackNavigator<RootStackParamList>()
+const App = () => {
+  return (
+      <Stack.Navigator initialRouteName="tabs/splashscreen">
+        <Stack.Screen name="tabs/splashscreen" component={SplashScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="tabs/welcome" component={WelcomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="tabs/login" component={Login} options={{ headerShown: false }} />
+        <Stack.Screen name="tabs/home" component={Home} options={{ headerShown: false }} />
+        <Stack.Screen name="tabs/register" component={Register} options={{ headerShown: false }} />
+      </Stack.Navigator>
+  );
+};
 
-export default function SplashScreen() {
-  const [showWelcomeScreen, setShowWelcomeScreen] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowWelcomeScreen(true);
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!showWelcomeScreen) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Welcome to MySnapchat</Text>
-        <Image
-          source={require("../../assets/images/snapghost.png")}
-          style={styles.image}
-        />
-      </View>
-    );
-  }
-
-  return <WelcomeScreen />;
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#FFFC00",
-  },
-  title: {
-    fontSize: 24,
-    position: 'absolute',
-    top: deviceHeight / 2.6,
-    color: "#000000",
-    fontWeight: "bold",
-  },
-  image: {
-    width: 100,
-    height: 200,
-    resizeMode: "contain",
-    top: deviceHeight / 2.6,
-  },
-});
+export default App;
