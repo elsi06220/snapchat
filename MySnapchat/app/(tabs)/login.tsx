@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 let deviceHeight = Dimensions.get("window").height;
 
 const Login = () => {
@@ -10,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
   const navigation = useNavigation();
 
