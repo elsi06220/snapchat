@@ -24,7 +24,7 @@ export default function HomeScreen() {
         if (status !== "granted") {
           Alert.alert(
             "Permission nécessaire",
-            "Cette application a besoin d'accéder à votre caméra",
+            "Cette application souhaite accéder à votre caméra",
             [
               { text: "Annuler", style: "cancel" },
               {
@@ -49,7 +49,7 @@ export default function HomeScreen() {
     if (permissionResult.granted === false) {
       Alert.alert(
         "Permission nécessaire",
-        "Cette application a besoin d'accéder à votre galerie",
+        "Cette application souhaite accéder à votre galerie",
         [
           { text: "Annuler", style: "cancel" },
           {
@@ -77,7 +77,7 @@ export default function HomeScreen() {
     if (permissionResult.granted === false) {
       Alert.alert(
         "Permission nécessaire",
-        "Cette application a besoin d'accéder à votre appareil photo",
+        "Cette application souhaite accéder à votre appareil photo",
         [
           { text: "Annuler", style: "cancel" },
           {
@@ -153,14 +153,14 @@ export default function HomeScreen() {
 
       const json = await response.json();
       if (response.ok) {
-        Alert.alert("Succès", "Snap envoyé avec succès");
+        Alert.alert("Succès", "Snap envoyé !");
         setModalVisible(false);
         setSelectedImage(null);
       } else {
-        Alert.alert("Erreur", json.message || "Erreur lors de l'envoi du snap");
+        Alert.alert("Erreur", json.message || "Envoie du snap impossible");
       }
     } catch (error) {
-      Alert.alert("Erreur", "Erreur lors de l'envoi du snap");
+      Alert.alert("Erreur", "Envoie du snap impossible");
     }
   };
 
@@ -201,29 +201,27 @@ export default function HomeScreen() {
         }}
       >
         <View style={styles.modalView}>
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <Text style={styles.modalText}>Utilisateurs</Text>
-            <FlatList
-              data={users}
-              renderItem={renderUser}
-              keyExtractor={(item) => item._id}
-              style={styles.userList}
-            />
-            <TextInput
-              style={styles.input}
-              onChangeText={setDuration}
-              value={duration}
-              placeholder="Durée (sec)"
-              keyboardType="numeric"
-            />
-            <Button title="Envoyer Snap" onPress={sendSnap} />
-            <Button
-              title="Fermer"
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            />
-          </ScrollView>
+          <Text style={styles.modalText}>Utilisateurs</Text>
+          <FlatList
+            data={users}
+            renderItem={renderUser}
+            keyExtractor={(item) => item._id}
+            style={styles.userList}
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={setDuration}
+            value={duration}
+            placeholder="Durée (sec)"
+            keyboardType="numeric"
+          />
+          <Button title="Envoyer Snap" onPress={sendSnap} />
+          <Button
+            title="Fermer"
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}
+          />
         </View>
       </Modal>
     </View>
