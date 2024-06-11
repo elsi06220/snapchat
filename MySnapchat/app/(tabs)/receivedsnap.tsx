@@ -107,8 +107,8 @@ export default function ReceivedSnapsScreen() {
       style={styles.snapItem}
       onPress={() => viewSnap(item._id)}
     >
-      <Text style={styles.snapText}>De: {item.from}</Text>
-      <Text style={styles.snapDate}>{new Date(item.date).toLocaleString()}</Text>
+      <Text style={styles.snapText}>De : {item.from}</Text>
+      <Text style={styles.snapDate}>Reçu le : {new Date(item.date).toLocaleString()}</Text>
     </TouchableOpacity>
   );
 
