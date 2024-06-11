@@ -52,7 +52,8 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Connectez-vous à MySnapchat !</Text>
+      <Text style={styles.title}>Connectez-vous</Text>
+      <Text style={styles.title2}>MySnapchat !</Text>
       <Image
         source={require("../../assets/images/snapghost.png")}
         style={styles.image}
@@ -60,6 +61,7 @@ const Login = () => {
       <TextInput
         style={styles.input}
         placeholder="E-mail"
+        placeholderTextColor="#000000"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -68,6 +70,7 @@ const Login = () => {
       <TextInput
         style={styles.input}
         placeholder="Mot de passe"
+        placeholderTextColor="#000000"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "contain",
     bottom: deviceHeight / 6,
-    marginBottom: -100,
+    marginBottom: -140,
   },
   text: {
     fontSize: 18,
@@ -116,16 +119,23 @@ const styles = StyleSheet.create({
   },
   yellowBox: {
     position: "absolute",
-    bottom: deviceHeight / 5.2,
+    bottom: deviceHeight / 5,
     backgroundColor: "#FFFC00",
-    height: deviceHeight / 10,
+    height: deviceHeight / 12,
     borderRadius: 20,
-    width: 130,
+    width: 140,
   },
   title: {
     fontSize: 24,
     position: "absolute",
     top: deviceHeight / 7,
+    color: "#000000",
+    fontWeight: "bold",
+  },
+  title2: {
+    fontSize: 24,
+    position: "absolute",
+    top: deviceHeight / 5.6,
     color: "#000000",
     fontWeight: "bold",
   },
@@ -136,18 +146,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 8,
+    borderRadius: 20,
     backgroundColor : '#d3d3d3',
   },
   error: {
     position : 'absolute',
     color: "red",
-    marginTop: - 200,
+    marginTop: - 215,
+    marginLeft : 33,
     textAlign: "center",
   },
   success: {
     position : 'absolute',
     color: "green",
-    marginTop: - 200,
+    marginTop: - 215,
+    marginLeft : 33,
     textAlign: "center",
   },
 });
