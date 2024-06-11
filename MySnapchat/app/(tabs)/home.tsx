@@ -1,23 +1,35 @@
-import { Image, StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, View, Text, Dimensions, TouchableOpacity, Alert, FlatList, Modal, Button, TextInput, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, useEffect } from "react";
 
-let deviceHeight = Dimensions.get('window').height;
-let deviceWidth = Dimensions.get('window').width;
+
+let deviceHeight = Dimensions.get("window").height;
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
+
+  const handleLogout = () => {
+    AsyncStorage.removeItem("token");
+    navigation.navigate("(tabs)/login" as never);
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      <Image
-        source={require("../../assets/images/snapghost.png")}
-        style={styles.image}
-      />
-      <TouchableOpacity style={styles.redBox}>
-        <Text style={styles.text}>Test Home</Text>
+      <TouchableOpacity style={styles.redBox} onPress={handleLogout}>
+        <Text style={styles.text}>Se déconnecter</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.blueBox}>
-        <Text style={styles.text}>Test Home</Text>
+      <TouchableOpacity
+        style={[styles.blueBox, { bottom: deviceHeight / 5 }]}
+        onPress={() => navigation.navigate("(tabs)/sendsnap" as never)}
+      >
+        <Text style={styles.text}>Envoyer un snap</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.greenBox, { bottom: 0 }]}
+        onPress={() => navigation.navigate("(tabs)/receivedsnap" as never)}
+      >
+        <Text style={styles.text}>Voir les snaps reçus</Text>
       </TouchableOpacity>
     </View>
   );
@@ -29,13 +41,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FFFC00",
   },
-  title: {
-    fontSize: 24,
-    position: 'absolute',
-    top: deviceHeight / 7,
-    color: "#000000",
-    fontWeight: "bold",
-  },
   text: {
     fontSize: 24,
     color: "#FFFFFF",
@@ -44,24 +49,25 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     marginTop: 25,
   },
-  image: {
-    width: 100,
-    height: 200,
-    resizeMode: "contain",
-    top: deviceHeight / 7,
-  },
   redBox: {
-    position: 'absolute',
+    position: "absolute",
     bottom: deviceHeight / 10,
-    backgroundColor: '#ff0049',
-    width: '100%',
+    backgroundColor: "#ff0049",
+    width: "100%",
     height: deviceHeight / 10,
   },
   blueBox: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    backgroundColor: '#00a9ff',
-    width: '100%',
+    backgroundColor: "#00a9ff",
+    width: "100%",
+    height: deviceHeight / 10,
+  },
+  greenBox: {
+    position: "absolute",
+    bottom: deviceHeight / 5,
+    backgroundColor: "#00ff00",
+    width: "100%",
     height: deviceHeight / 10,
   },
 });
