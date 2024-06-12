@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert, StyleSheet, FlatList, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  Modal,
+  Image,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 
@@ -7,11 +17,15 @@ type Snap = {
   _id: string;
   date: string;
   from: string;
+  image: string;
+  duration: number;
 };
 
-export default function ReceivedSnapsScreen() {
+export default function ReceivedSnap() {
   const [snaps, setSnaps] = useState<Snap[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSnap, setSelectedSnap] = useState<Snap | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -25,7 +39,8 @@ export default function ReceivedSnapsScreen() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhc3NpZHkubmd1eWVuQGVwaXRlY2guZXUiLCJpYXQiOjE3MTc3NjQwNjl9.GmU6Ur8xdyKF_orG358zEEHl9eF6AC5x2IxbDmne4mc",
+          "x-api-key":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhc3NpZHkubmd1eWVuQGVwaXRlY2guZXUiLCJpYXQiOjE3MTc3NjQwNjl9.GmU6Ur8xdyKF_orG358zEEHl9eF6AC5x2IxbDmne4mc",
           Authorization: `Bearer ${token}`,
         },
       });
@@ -42,6 +57,29 @@ export default function ReceivedSnapsScreen() {
     }
   };
 
+  const fetchUsername = async (id: string) => {
+    const token = await AsyncStorage.getItem("token");
+    try {
+      const response = await fetch(`https://snapchat.epidoc.eu/user/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhc3NpZHkubmd1eWVuQGVwaXRlY2guZXUiLCJpYXQiOjE3MTc3NjQwNjl9.GmU6Ur8xdyKF_orG358zEEHl9eF6AC5x2IxbDmne4mc",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const userData = await response.json();
+      if (response.ok) {
+        return userData.username;
+      } else {
+        return "Utilisateur inconnu";
+      }
+    } catch (error) {
+      return "Utilisateur inconnu";
+    }
+  };
+
   const viewSnap = async (id: string) => {
     const token = await AsyncStorage.getItem("token");
     try {
@@ -49,28 +87,20 @@ export default function ReceivedSnapsScreen() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhc3NpZHkubmd1eWVuQGVwaXRlY2guZXUiLCJpYXQiOjE3MTc3NjQwNjl9.GmU6Ur8xdyKF_orG358zEEHl9eF6AC5x2IxbDmne4mc",
+          "x-api-key":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhc3NpZHkubmd1eWVuQGVwaXRlY2guZXUiLCJpYXQiOjE3MTc3NjQwNjl9.GmU6Ur8xdyKF_orG358zEEHl9eF6AC5x2IxbDmne4mc",
           Authorization: `Bearer ${token}`,
         },
       });
 
       const json = await response.json();
       if (response.ok) {
-        Alert.alert(
-          "Snap",
-          "Durée: " + json.duration + " secondes",
-          [
-            {
-              text: "OK",
-              onPress: async () => {
-                setTimeout(() => {
-                  deleteSnap(id);
-                }, json.duration * 1000);
-              },
-            },
-          ],
-          { cancelable: false }
-        );
+        const username = await fetchUsername(json.data.from);
+        setSelectedSnap({ ...json.data, from: username });
+        setModalVisible(true);
+        setTimeout(() => {
+          setModalVisible(false);
+        }, json.data.duration * 1000);
       } else {
         Alert.alert("Erreur", "Échec de l'ouverture du snap");
       }
@@ -79,36 +109,20 @@ export default function ReceivedSnapsScreen() {
     }
   };
 
-  const deleteSnap = async (id: string) => {
-    const token = await AsyncStorage.getItem("token");
-    try {
-      const response = await fetch(`https://snapchat.epidoc.eu/snap/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhc3NpZHkubmd1eWVuQGVwaXRlY2guZXUiLCJpYXQiOjE3MTc3NjQwNjl9.GmU6Ur8xdyKF_orG358zEEHl9eF6AC5x2IxbDmne4mc",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        setSnaps(snaps.filter((snap) => snap._id !== id));
-        Alert.alert("Succès", "Snap supprimé");
-      } else {
-        Alert.alert("Erreur", "Échec de la suppression du snap");
-      }
-    } catch (error) {
-      Alert.alert("Erreur", "Erreur lors de la suppression du snap");
-    }
-  };
-
   const renderSnap = ({ item }: { item: Snap }) => (
     <TouchableOpacity
       style={styles.snapItem}
       onPress={() => viewSnap(item._id)}
     >
+<<<<<<< pt3
+      <Text style={styles.snapText}>De: {item.from}</Text>
+      <Text style={styles.snapDate}>
+        {new Date(item.date).toLocaleString()}
+      </Text>
+=======
       <Text style={styles.snapText}>De : {item.from}</Text>
       <Text style={styles.snapDate}>Reçu le : {new Date(item.date).toLocaleString()}</Text>
+>>>>>>> main
     </TouchableOpacity>
   );
 
@@ -134,6 +148,21 @@ export default function ReceivedSnapsScreen() {
       >
         <Text style={styles.backButtonText}>Retourner à l'accueil</Text>
       </TouchableOpacity>
+      {selectedSnap && (
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <Image
+              source={{ uri: selectedSnap.image }}
+              style={styles.snapImage}
+              resizeMode="contain"
+            />
+          </View>
+        </Modal>
+      )}
     </SafeAreaView>
   );
 }
@@ -179,5 +208,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  snapImage: {
+    width: "100%",
+    height: "100%",
   },
 });

@@ -11,12 +11,15 @@ import {
   FlatList,
   Image,
   Keyboard,
+  InputAccessoryView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Linking, Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
+import { Picker } from "@react-native-picker/picker";
+
 
 type User = {
   _id: string;
@@ -178,7 +181,10 @@ export default function SendSnapScreen() {
 
   const renderUser = ({ item }: { item: User }) => (
     <TouchableOpacity
-      style={styles.userItem}
+      style={[
+        styles.userItem,
+        item._id === selectedUser ? styles.selectedUser : null,
+      ]}
       onPress={() => setSelectedUser(item._id)}
     >
       <Text style={styles.username}>{item.username}</Text>
@@ -215,24 +221,21 @@ export default function SendSnapScreen() {
               keyExtractor={(item) => item._id}
               ListEmptyComponent={<Text>Aucun utilisateur trouvé.</Text>}
             />
-            <View style={styles.durationInputContainer}>
-              <Text>durée : </Text>
-              <TextInput
-                style={styles.durationInput}
-                onChangeText={setDuration}
-                value={duration}
-                keyboardType="numeric"
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  setDuration("");
-                  dismissKeyboard();
-                }}
-                style={styles.closeButton}
+            {/* <View style={styles.durationInputContainer}>
+              <Picker
+                selectedValue={duration}
+                style={styles.durationPicker}
+                onValueChange={(itemValue) => setDuration(itemValue)}
               >
-                <Text>Annuler</Text>
-              </TouchableOpacity>
-            </View>
+                {[...Array(24)].map((_, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={`${(index + 1) * 5}`}
+                    value={`${(index + 1) * 5}`}
+                  />
+                ))}
+              </Picker>
+            </View> */}
             <Button title="Envoyer" onPress={sendSnap} />
           </View>
         )}
@@ -290,6 +293,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
+  selectedUser: {
+    backgroundColor: "lightblue",
+  },
   username: {
     fontSize: 16,
   },
@@ -298,13 +304,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  durationInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginLeft: 5,
-    width: 50,
+  durationPicker: {
+    height: 50,
+    width: 150,
+    marginLeft: 10,
   },
   homeButton: {
     backgroundColor: "#00a9ff",
@@ -317,8 +320,5 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
-  },
-  closeButton: {
-    marginLeft: 10,
   },
 });
