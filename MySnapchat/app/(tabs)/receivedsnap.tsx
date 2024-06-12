@@ -19,6 +19,7 @@ type Snap = {
   from: string;
   image: string;
   duration: number;
+  fromUsername?: string; // Optional property for storing the username
 };
 
 export default function ReceivedSnap() {
@@ -46,7 +47,13 @@ export default function ReceivedSnap() {
       });
       const json = await response.json();
       if (response.ok) {
-        setSnaps(json.data);
+        const snapsWithUsernames = await Promise.all(
+          json.data.map(async (snap: Snap) => {
+            const username = await fetchUsername(snap.from);
+            return { ...snap, fromUsername: username };
+          })
+        );
+        setSnaps(snapsWithUsernames);
       } else {
         Alert.alert("Erreur", "Échec de la récupération des snaps");
       }
@@ -57,7 +64,7 @@ export default function ReceivedSnap() {
     }
   };
 
-  const fetchUsername = async (id: string) => {
+  const fetchUsername = async (id: string): Promise<string> => {
     const token = await AsyncStorage.getItem("token");
     try {
       const response = await fetch(`https://snapchat.epidoc.eu/user/${id}`, {
@@ -96,10 +103,13 @@ export default function ReceivedSnap() {
       const json = await response.json();
       if (response.ok) {
         const username = await fetchUsername(json.data.from);
-        setSelectedSnap({ ...json.data, from: username });
+        const snapWithUsername: Snap = { ...json.data, fromUsername: username };
+        setSelectedSnap(snapWithUsername);
         setModalVisible(true);
         setTimeout(() => {
           setModalVisible(false);
+          markSnapAsSeen(snapWithUsername._id);
+          setSnaps((prevSnaps) => prevSnaps.filter((snap) => snap._id !== id));
         }, json.data.duration * 1000);
       } else {
         Alert.alert("Erreur", "Échec de l'ouverture du snap");
@@ -109,20 +119,34 @@ export default function ReceivedSnap() {
     }
   };
 
+  const markSnapAsSeen = async (id: string) => {
+    const token = await AsyncStorage.getItem("token");
+    try {
+      const response = await fetch(`https://snapchat.epidoc.eu/snap/seen/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNhc3NpZHkubmd1eWVuQGVwaXRlY2guZXUiLCJpYXQiOjE3MTc3NjQwNjl9.GmU6Ur8xdyKF_orG358zEEHl9eF6AC5x2IxbDmne4mc",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        Alert.alert("Erreur", "Échec de la mise à jour du snap comme vu");
+      }
+    } catch (error) {
+      Alert.alert("Erreur", "Erreur lors de la mise à jour du snap comme vu");
+    }
+  };
+
   const renderSnap = ({ item }: { item: Snap }) => (
     <TouchableOpacity
       style={styles.snapItem}
       onPress={() => viewSnap(item._id)}
     >
-<<<<<<< pt3
-      <Text style={styles.snapText}>De: {item.from}</Text>
-      <Text style={styles.snapDate}>
-        {new Date(item.date).toLocaleString()}
-      </Text>
-=======
-      <Text style={styles.snapText}>De : {item.from}</Text>
+      <Text style={styles.snapText}>De : {item.fromUsername || item.from}</Text>
       <Text style={styles.snapDate}>Reçu le : {new Date(item.date).toLocaleString()}</Text>
->>>>>>> main
     </TouchableOpacity>
   );
 
@@ -178,7 +202,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,
-    marginHorizontal : 10,
+    marginHorizontal: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

@@ -7,7 +7,8 @@ import Home from './home';
 import Register from './register';
 import SplashScreen from './splashscreen';
 import SendSnap from './sendsnap';
-import ReceivedSnaps from './receivedsnap';
+import ReceivedSnap from './receivedsnap';
+import ProfileScreen from './profile';
 
 type RootStackParamList = {
   'tabs/splashscreen': undefined;
@@ -17,6 +18,7 @@ type RootStackParamList = {
   'tabs/register': undefined;
   'tabs/sendsnap': undefined;
   'tabs/receivedsnap': undefined;
+  'tabs/profile': undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>()
@@ -29,7 +31,8 @@ const App = () => {
         <Stack.Screen name="tabs/home" component={Home} options={{ headerShown: false }} />
         <Stack.Screen name="tabs/register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="tabs/sendsnap" component={SendSnap} options={{ headerShown: true, title: 'Envoyer un Snap' }} />
-        <Stack.Screen name="tabs/receivedsnap" component={ReceivedSnaps} options={{ headerShown: true, title: 'Snaps Reçus' }} />
+        <Stack.Screen name="tabs/receivedsnap" component={ReceivedSnap} options={{ headerShown: true, title: 'Snaps Reçus' }} />
+        <Stack.Screen name="tabs/profile" component={ProfileScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
   );
 };
