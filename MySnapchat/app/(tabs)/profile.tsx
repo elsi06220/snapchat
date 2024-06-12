@@ -9,11 +9,25 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
+import React, { useEffect, useState } from "react";
 
 let deviceHeight = Dimensions.get("window").height;
 let deviceWidth = Dimensions.get("window").width;
 
 export default function ProfileScreen() {
+  const [user, setUser] = useState(null);
+ 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        console.log(storedUser);
+      }
+    };
+ 
+    fetchUser();
+  }, []);
   const navigation = useNavigation();
 
   const handleLogout = () => {
@@ -36,7 +50,9 @@ export default function ProfileScreen() {
           style={styles.image}
         />
       </View>
-      <Text style={styles.title}>Profil de : </Text>
+      <Text style={[styles.title, styles.common]}>Nom d'utilisateur : {user ? user.username : ''}</Text>
+      <Text style={[styles.title2, styles.common]}>Email : {user ? user.email : ''}</Text>
+      <Text style={[styles.title3, styles.common]}>Mot de passe : *******</Text>
       <TouchableOpacity style={styles.redBox} onPress={handleLogout}>
         <Text style={styles.text}>Se déconnecter</Text>
       </TouchableOpacity>
@@ -52,6 +68,21 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#FFFFFF",
+  },
+  common: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,      
+    borderRadius : 20,         
+    marginBottom: 10,    
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    textAlign :'center',       
   },
   backButton: {
     backgroundColor: "#00a9ff",
@@ -71,11 +102,37 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     position: "absolute",
     top: deviceHeight / 3.5,
     color: "#000000",
     fontWeight: "bold",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal : 10,
+  },
+  title2: {
+    fontSize: 20,
+    position: "absolute",
+    top: deviceHeight / 2.77,
+    color: "#000000",
+    fontWeight: "bold",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal : 10,
+  },
+  title3: {
+    fontSize: 20,
+    position: "absolute",
+    top: deviceHeight / 2.3,
+    color: "#000000",
+    fontWeight: "bold",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal : 10,
   },
   text: {
     fontSize: 24,

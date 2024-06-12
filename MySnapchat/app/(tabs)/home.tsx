@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#FFFC00",
+    backgroundColor: "#FFFFFF",
   },
   iconprofile: {
     position: "absolute",
