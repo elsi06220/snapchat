@@ -114,10 +114,15 @@ export default function ReceivedSnap() {
       style={styles.snapItem}
       onPress={() => viewSnap(item._id)}
     >
+<<<<<<< pt3
       <Text style={styles.snapText}>De: {item.from}</Text>
       <Text style={styles.snapDate}>
         {new Date(item.date).toLocaleString()}
       </Text>
+=======
+      <Text style={styles.snapText}>De : {item.from}</Text>
+      <Text style={styles.snapDate}>Reçu le : {new Date(item.date).toLocaleString()}</Text>
+>>>>>>> main
     </TouchableOpacity>
   );
 
@@ -165,14 +170,15 @@ export default function ReceivedSnap() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFC00",
+    backgroundColor: "#FFFFFF",
     padding: 10,
   },
   snapItem: {
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
-    marginVertical: 8,
+    marginVertical: 10,
+    marginHorizontal : 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
