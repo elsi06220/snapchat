@@ -253,7 +253,7 @@ export default function SendSnapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFC00",
+    backgroundColor: "#FFFFFF",
     padding: 10,
     justifyContent: "center",
   },
