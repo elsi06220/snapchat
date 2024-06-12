@@ -4,6 +4,7 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
+  Image
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -28,14 +29,20 @@ export default function ProfileScreen() {
       >
         <Icon name="arrow-left" size={20} color="#fff" />
         <Text style={styles.backButtonText}>Retour</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>        
+      <View style={styles.roundBackground}>
+        <Image
+          source={require("../../assets/images/default.png")}
+          style={styles.image}
+        />
+      </View>
       <Text style={styles.title}>Profil de : </Text>
       <TouchableOpacity style={styles.redBox} onPress={handleLogout}>
         <Text style={styles.text}>Se déconnecter</Text>
       </TouchableOpacity>
-      {/* <TouchableOpacity style={styles.blueBox}>
-        <Text style={styles.text}>S'inscrire</Text>
-      </TouchableOpacity> */}
+      <TouchableOpacity style={styles.blueBox}>
+        <Text style={styles.text}>Modifier mon profil</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -44,7 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#FFFC00",
+    backgroundColor: "#FFFFFF",
   },
   backButton: {
     backgroundColor: "#00a9ff",
@@ -66,7 +73,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     position: "absolute",
-    top: deviceHeight / 7,
+    top: deviceHeight / 3.5,
     color: "#000000",
     fontWeight: "bold",
   },
@@ -76,20 +83,41 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     textAlignVertical: "center",
-    marginTop: 25,
+    marginTop: 22,
+  },
+  roundBackground: {
+    position: 'absolute',
+    top : 105,
+    width: 120, 
+    height: 120, 
+    borderRadius: 60, 
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
   image: {
-    width: 100,
-    height: 200,
+    position: 'absolute',
+    width: 150,
+    height: 300,
     resizeMode: "contain",
-    top: deviceHeight / 7,
+    top: - 66,
   },
   redBox: {
     position: "absolute",
     bottom: 0,
-    backgroundColor: "#ff0049",
-    width: "100%",
-    height: deviceHeight / 10,
+    backgroundColor: "red",
+    width: "75%",
+    height: deviceHeight / 12,
+    borderRadius: 20,
+  },
+  blueBox: {
+    position: 'absolute',
+    bottom: deviceHeight / 10,
+    backgroundColor: 'blue',
+    width: '75%',
+    height: deviceHeight / 12,
+    borderRadius: 20,
   },
   iconarrow: {
     position: "absolute",
