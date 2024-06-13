@@ -14,9 +14,14 @@ import React, { useEffect, useState } from "react";
 let deviceHeight = Dimensions.get("window").height;
 let deviceWidth = Dimensions.get("window").width;
 
+type User = {
+  username: string;
+  email: string;
+};
+
 export default function ProfileScreen() {
-  const [user, setUser] = useState(null);
- 
+  const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
     const fetchUser = async () => {
       const storedUser = await AsyncStorage.getItem('user');
@@ -25,9 +30,10 @@ export default function ProfileScreen() {
         console.log(storedUser);
       }
     };
- 
+
     fetchUser();
   }, []);
+
   const navigation = useNavigation();
 
   const handleLogout = () => {
