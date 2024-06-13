@@ -26,7 +26,7 @@ type User = {
   username: string;
 };
 
-export default function SendSnapScreen() {
+export default function SendSnap() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -244,7 +244,7 @@ export default function SendSnapScreen() {
         style={styles.homeButton}
         onPress={() => navigation.navigate("(tabs)/home" as never)}
       >
-        <Text style={styles.homeButtonText}>Retour à Home</Text>
+        <Text style={styles.homeButtonText}>Retour</Text>
       </TouchableOpacity>
     </View>
   );
